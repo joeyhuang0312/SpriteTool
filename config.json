@@ -1,0 +1,14 @@
+{
+  "inputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\resource\\TheMagicHanzo\\sprites原版碎图",
+  "outputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\resource\\TheMagicHanzo\\sprites720png",
+  "scaleFactor": 0.666,
+  "folderPattern": ".*",
+  "texturePacker": {
+    "enable": true,
+    "cliPath": "C:/Program Files/CodeAndWeb/TexturePacker/bin/TexturePacker.exe",
+    "textureFormat": "png",
+    "params": "--trim-mode Trim --size-constraints AnySize --disable-rotation --format cocos2d --texture-format png",
+    "plistOutputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\resource\\TheMagicHanzo\\sprites720atlas",
+    "recursive": true
+  }
+}
