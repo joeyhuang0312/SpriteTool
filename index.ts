@@ -3,8 +3,8 @@ import path from "path";
 import sharp from "sharp";
 import { execSync } from "child_process";
 
-import rawConfig from "./config.json";
-const config = {
+import config from "./config.json";
+/* const config = {
     ...rawConfig,
     inputDir: decodeURIComponent(rawConfig.inputDir),
     outputDir: decodeURIComponent(rawConfig.outputDir),
@@ -12,7 +12,7 @@ const config = {
         ...rawConfig.texturePacker,
         plistOutputDir: decodeURIComponent(rawConfig.texturePacker.plistOutputDir),
     },
-};
+}; */
 
 async function processImage(inputPath: string, outputPath: string): Promise<void> {
     try {
@@ -68,6 +68,11 @@ function processSpriteSheets(dir: string): void {
         if (hasImages) {
             const relativePath = path.relative(baseDir, currentDir);
             const atlasName = relativePath.split(path.sep).join("_");
+            // 检查 config.texturePacker 是否存在，避免未定义错误
+            if (!config.texturePacker) {
+                console.error('config.texturePacker 未定义，无法生成命令。');
+                return;
+            }
             const cmd = `"${config.texturePacker.cliPath}" ${config.texturePacker.params.trim()} \
         --sheet "${path.join(
             config.texturePacker?.plistOutputDir || dir,

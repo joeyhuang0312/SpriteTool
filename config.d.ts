@@ -10,6 +10,11 @@ declare module '*.json' {
       textureFormat: string;
       params: string;
       plistOutputDir?: string;
+    },
+    extract?: {
+      plistPath: string;
+      imagePath: string;
+      outputDir: string;
     };
   }
 

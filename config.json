@@ -8,7 +8,11 @@
     "cliPath": "C:/Program Files/CodeAndWeb/TexturePacker/bin/TexturePacker.exe",
     "textureFormat": "png",
     "params": "--trim-mode Trim --size-constraints AnySize --disable-rotation --format cocos2d --texture-format png",
-    "plistOutputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\resource\\TheMagicHanzo\\sprites720atlas",
-    "recursive": true
+    "plistOutputDir": "D:\\mySVN\\ClientAssets\\publicFiles\resource\\TheMagicHanzo\\sprites720atlas"
+  },
+  "extract": {
+    "plistPath": "./input/popup.plist",
+    "imagePath": "./input/popup.png",
+    "outputDir": "./output"
   }
 }
