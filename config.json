@@ -11,8 +11,8 @@
     "plistOutputDir": "D:\\mySVN\\ClientAssets\\publicFiles\resource\\TheMagicHanzo\\sprites720atlas"
   },
   "extract": {
-    "plistPath": "./input/popup.plist",
-    "imagePath": "./input/popup.png",
-    "outputDir": "./output"
+    "outputDir": "./output",
+    "batchInputDir": "./input",
+    "batchOutputRootDir": "./output"
   }
 }

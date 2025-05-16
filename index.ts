@@ -4,16 +4,12 @@ import sharp from "sharp";
 import { execSync } from "child_process";
 
 import config from "./config.json";
-/* const config = {
-    ...rawConfig,
-    inputDir: decodeURIComponent(rawConfig.inputDir),
-    outputDir: decodeURIComponent(rawConfig.outputDir),
-    texturePacker: {
-        ...rawConfig.texturePacker,
-        plistOutputDir: decodeURIComponent(rawConfig.texturePacker.plistOutputDir),
-    },
-}; */
 
+/**
+ * 处理单张图片的缩放操作
+ * @param inputPath 输入图片的路径
+ * @param outputPath 缩放后图片的输出路径
+ */
 async function processImage(inputPath: string, outputPath: string): Promise<void> {
     try {
         const image = sharp(inputPath);
@@ -30,6 +26,10 @@ async function processImage(inputPath: string, outputPath: string): Promise<void
     }
 }
 
+/**
+ * 处理单个图集文件的打包操作（需启用Texture Packer）
+ * @param spriteSheetPath 图集文件路径（.spritesheet）
+ */
 async function processSpriteSheet(spriteSheetPath: string): Promise<void> {
     if (!config.texturePacker?.enable) return;
 
@@ -47,6 +47,11 @@ async function processSpriteSheet(spriteSheetPath: string): Promise<void> {
     }
 }
 
+/**
+ * 递归遍历目录并对每个文件执行处理函数
+ * @param dir 要遍历的根目录
+ * @param fileHandler 处理单个文件的回调函数
+ */
 function processFiles(dir: string, fileHandler: (filePath: string) => void): void {
     const files = fs.readdirSync(dir);
     files.forEach((file) => {
@@ -61,6 +66,10 @@ function processFiles(dir: string, fileHandler: (filePath: string) => void): voi
     });
 }
 
+/**
+ * 递归处理目标目录，为包含图片的子目录生成图集
+ * @param dir 要处理的根目录（通常为输出目录）
+ */
 function processSpriteSheets(dir: string): void {
     function processFolder(currentDir: string, baseDir: string = dir) {
         const hasImages = fs.readdirSync(currentDir).some((file) => /.(jpg|jpeg|png|webp|gif)$/i.test(file));
@@ -70,7 +79,7 @@ function processSpriteSheets(dir: string): void {
             const atlasName = relativePath.split(path.sep).join("_");
             // 检查 config.texturePacker 是否存在，避免未定义错误
             if (!config.texturePacker) {
-                console.error('config.texturePacker 未定义，无法生成命令。');
+                console.error("config.texturePacker 未定义，无法生成命令。");
                 return;
             }
             const cmd = `"${config.texturePacker.cliPath}" ${config.texturePacker.params.trim()} \
@@ -99,6 +108,10 @@ function processSpriteSheets(dir: string): void {
     processFolder(dir);
 }
 
+/**
+ * 主处理流程：先缩放图片，再打包图集
+ * @param dir 待处理的原始目录（配置中的inputDir）
+ */
 async function processDirectory(dir: string) {
     // 第一阶段：处理图片缩放
     processFiles(dir, (filePath) => {

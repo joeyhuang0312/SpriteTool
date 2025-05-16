@@ -12,9 +12,10 @@ declare module '*.json' {
       plistOutputDir?: string;
     },
     extract?: {
-      plistPath: string;
-      imagePath: string;
+      batchInputDir: string;
+      batchOutputRootDir: string;
       outputDir: string;
+
     };
   }
 
