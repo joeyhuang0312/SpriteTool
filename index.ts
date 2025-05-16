@@ -76,6 +76,7 @@ function processSpriteSheets(dir: string): void {
 
         if (hasImages) {
             const relativePath = path.relative(baseDir, currentDir);
+            console.log("path:", baseDir, currentDir, relativePath);
             const atlasName = relativePath.split(path.sep).join("_");
             // 检查 config.texturePacker 是否存在，避免未定义错误
             if (!config.texturePacker) {
@@ -92,7 +93,7 @@ function processSpriteSheets(dir: string): void {
 
             try {
                 execSync(cmd, { stdio: "inherit" });
-                console.log(`Packaged folder: ${relativePath}`);
+                // console.log(`Packaged folder: ${relativePath}`);
             } catch (err: any) {
                 console.error(`Error packaging ${relativePath}:`, err.message);
             }

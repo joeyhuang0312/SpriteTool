@@ -7,14 +7,29 @@ import rawConfig from "./config.json";
 // 为了避免 rawConfig.extract 为 undefined 的情况，添加默认值
 const { batchInputDir = "./input/batch", batchOutputRootDir = "./output/batch" } = rawConfig.extract || {};
 
-// 遍历输入目录中的plist文件
-const plistFiles = fs.readdirSync(batchInputDir).filter(file => path.extname(file) === ".plist");
+// 递归遍历输入目录中的所有plist文件
+function walkDir(dir: string): string[] {
+    let results: string[] = [];
+    const list = fs.readdirSync(dir, { withFileTypes: true });
+    for (const entry of list) {
+        if (entry.isDirectory()) {
+            results = results.concat(walkDir(path.join(dir, entry.name)));
+        } else if (entry.isFile() && path.extname(entry.name) === '.plist') {
+            results.push(path.join(dir, entry.name));
+        }
+    }
+    return results;
+}
+
+const plistFiles = walkDir(batchInputDir);
 
 for (const plistFile of plistFiles) {
-    const plistName = path.basename(plistFile, ".plist");
-    const currentPlistPath = path.join(batchInputDir, plistFile);
-    const currentImagePath = path.join(batchInputDir, `${plistName}.png`);
-    const currentOutputDir = path.join(batchOutputRootDir, plistName);
+    const relativePath = path.relative(batchInputDir, plistFile);
+    const plistName = path.basename(relativePath, ".plist");
+    const dirPath = path.dirname(relativePath);
+    const currentPlistPath = plistFile;
+    const currentImagePath = path.join(path.dirname(plistFile), `${plistName}.png`);
+    const currentOutputDir = path.join(batchOutputRootDir, dirPath, plistName);
 
     // 检查对应png是否存在
     if (!fs.existsSync(currentImagePath)) {
