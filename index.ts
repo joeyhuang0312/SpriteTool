@@ -15,8 +15,8 @@ async function processImage(inputPath: string, outputPath: string): Promise<void
         const image = sharp(inputPath);
         const metadata = await image.metadata();
 
-        const newWidth = Math.round(metadata.width! * config.scaleFactor);
-        const newHeight = Math.round(metadata.height! * config.scaleFactor);
+        const newWidth = Math.round(metadata.width! * (720/1080));
+        const newHeight = Math.round(metadata.height! * (720/1080));
 
         await image.resize(newWidth, newHeight).toFile(outputPath);
 
@@ -131,6 +131,7 @@ async function processDirectory(dir: string) {
     // return;
     await new Promise((resolve) => setTimeout(resolve, 2000)); // 等待2秒，确保所有图片处理完成，然后再开始处理spriteSheetDat
     console.log("All images processed.");
+    if (!config.texturePacker?.enable) return;
     console.log("Starting sprite sheet processing...");
     // 第二阶段：处理图集打包
     processSpriteSheets(config.outputDir);
