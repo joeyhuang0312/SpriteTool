@@ -2,6 +2,7 @@
   "scripts": {
     "start": "ts-node index.ts",
     "split": "ts-node split.ts",
+    "splitJson": "ts-node split_json.ts",
     "build": "tsc"
   },
   "devDependencies": {

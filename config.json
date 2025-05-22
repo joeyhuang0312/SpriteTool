@@ -12,7 +12,7 @@
   },
   "extract": {
     "outputDir": "./output",
-    "batchInputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\Common",
-    "batchOutputRootDir": "D:\\mySVN\\ClientAssets\\publicFiles\\Common1080png"
+    "batchInputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\GL",
+    "batchOutputRootDir": "./output"
   }
 }
