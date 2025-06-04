@@ -1,18 +1,18 @@
 {
-  "inputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\Common",
-  "outputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\Common720",
+  "inputDir": "./output/1080p",
+  "outputDir": "./output/atltas720p",
   "scaleFactor": 0.666,
   "folderPattern": ".*",
   "texturePacker": {
-    "enable": false,
+    "enable": true,
     "cliPath": "C:/Program Files/CodeAndWeb/TexturePacker/bin/TexturePacker.exe",
     "textureFormat": "png",
     "params": "--trim-mode Trim --size-constraints AnySize --padding 2 --disable-rotation --format cocos2d --texture-format png",
-    "plistOutputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\Common720Atlas"
+    "plistOutputDir": "./output/720Atlas"
   },
   "extract": {
     "outputDir": "./output",
-    "batchInputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\GL",
-    "batchOutputRootDir": "./output"
+    "batchInputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\DragonVsTiger",
+    "batchOutputRootDir": "./output/1080p"
   }
 }
