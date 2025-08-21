@@ -1,10 +1,11 @@
 {
-  "inputDir": "./output/1080p",
-  "outputDir": "./output/atltas720p",
-  "scaleFactor": 0.666,
+  "inputDir": "E:\\TomeOfMadness\\free",
+  "outputDir": "E:\\TomeOfMadness\\free\\80",
+
+  "scaleFactor": 0.8,
   "folderPattern": ".*",
   "texturePacker": {
-    "enable": true,
+    "enable": false,
     "cliPath": "C:/Program Files/CodeAndWeb/TexturePacker/bin/TexturePacker.exe",
     "textureFormat": "png",
     "params": "--trim-mode Trim --size-constraints AnySize --padding 2 --disable-rotation --format cocos2d --texture-format png",
@@ -12,7 +13,7 @@
   },
   "extract": {
     "outputDir": "./output",
-    "batchInputDir": "D:\\mySVN\\ClientAssets\\publicFiles\\DragonVsTiger",
+    "batchInputDir": "D:\\mySVN\\SoureAssets\\game-365\\resources\\games\\gridslot\\tomeofmadness",
     "batchOutputRootDir": "./output/1080p"
   }
 }
