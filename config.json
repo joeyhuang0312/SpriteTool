@@ -1,9 +1,26 @@
 {
-  "inputDir": "E:\\TomeOfMadness\\free",
-  "outputDir": "E:\\TomeOfMadness\\free\\80",
-
+  "inputDir": "E:\\TomeOfMadness\\voidLightning",
+  "outputDir": "E:\\TomeOfMadness\\voidLightning\\new",
   "scaleFactor": 0.8,
   "folderPattern": ".*",
+  
+  
+  "crop": {
+    "enable": false,
+    "x": 400,
+    "y": 335,
+    "width": 920,
+    "height": 540
+  },
+  "imageOptimization": {
+    "enable": true,
+    "format": "png",           
+    "quality": 90,             
+    "compressionLevel": 9,     
+    "progressive": true,       
+    "optimizeScans": true,   
+    "mozjpeg": true           
+  },
   "texturePacker": {
     "enable": false,
     "cliPath": "C:/Program Files/CodeAndWeb/TexturePacker/bin/TexturePacker.exe",

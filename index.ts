@@ -125,7 +125,8 @@ async function processDirectory(dir: string) {
       fs.mkdirSync(decodeURIComponent(path.dirname(outputPath)), {
         recursive: true,
       });
-      processImage(filePath, outputPath);
+      // processImage(filePath, outputPath);
+      ProcessImageWithCropOptimized(filePath,outputPath);
     }
   });
   // return;
@@ -151,4 +152,123 @@ try {
 } catch (err) {
   console.error("Fatal error:", err);
   process.exit(1);
+}
+
+/**
+ * 裁剪单张图片
+ * @param inputPath 输入图片的路径
+ * @param outputPath 裁剪后图片的输出路径
+ * @param x 裁剪起始X坐标
+ * @param y 裁剪起始Y坐标
+ * @param width 裁剪宽度
+ * @param height 裁剪高度
+ */
+async function CropImage(inputPath: string, outputPath: string, x: number, y: number, width: number, height: number): Promise<void> {
+  try {
+    const image = sharp(inputPath);
+    const metadata = await image.metadata();
+    
+    // 验证裁剪参数是否在图片范围内
+    if (x < 0 || y < 0 || x + width > metadata.width! || y + height > metadata.height!) {
+      throw new Error(`裁剪参数超出图片范围。图片尺寸: ${metadata.width}x${metadata.height}, 裁剪区域: ${x},${y},${width}x${height}`);
+    }
+    
+    // 执行裁剪操作
+    await image
+      .extract({ left: x, top: y, width: width, height: height })
+      .toFile(outputPath);
+    
+    console.log(`Cropped: ${inputPath} → ${outputPath} (${x},${y},${width}x${height})`);
+  } catch (err: any) {
+    console.error(`Error cropping ${inputPath}:`, err.message);
+  }
+}
+
+/**
+ * 批量裁剪图片（根据配置文件中的裁剪参数）
+ * @param inputPath 输入图片的路径
+ * @param outputPath 裁剪后图片的输出路径
+ */
+/**
+ * 优化版本的图片裁剪和压缩函数
+ * @param inputPath 输入图片的路径
+ * @param outputPath 输出图片的路径
+ */
+async function ProcessImageWithCropOptimized(inputPath: string, outputPath: string): Promise<void> {
+  try {
+    const image = sharp(inputPath);
+    const metadata = await image.metadata();
+    
+    let processedImage = image;
+    
+    // 如果配置文件中有裁剪参数，则进行裁剪
+    if (config.crop && config.crop.enable) {
+      const { x, y, width, height } = config.crop;
+      
+      // 验证裁剪参数
+      if (x < 0 || y < 0 || x + width > metadata.width! || y + height > metadata.height!) {
+        console.warn(`跳过 ${inputPath}: 裁剪参数超出图片范围`);
+        return;
+      }
+      
+      // 先裁剪再缩放
+      processedImage = processedImage
+        .extract({ left: x, top: y, width: width, height: height })
+        .resize(
+          Math.round(width * config.scaleFactor),
+          Math.round(height * config.scaleFactor)
+        );
+    } else {
+      // 只进行缩放
+      const newWidth = Math.round(metadata.width! * config.scaleFactor);
+      const newHeight = Math.round(metadata.height! * config.scaleFactor);
+      processedImage = processedImage.resize(newWidth, newHeight);
+    }
+    
+    // 应用图片优化设置
+    if (config.imageOptimization && config.imageOptimization.enable) {
+      const opt = config.imageOptimization;
+      
+      switch (opt.format.toLowerCase()) {
+        case 'jpeg':
+        case 'jpg':
+          processedImage = processedImage.jpeg({
+            quality: opt.quality || 90,
+            progressive: opt.progressive || true,
+            optimizeScans: opt.optimizeScans || true,
+            mozjpeg: opt.mozjpeg || true
+          });
+          break;
+          
+        case 'png':
+          processedImage = processedImage.png({
+            compressionLevel: opt.compressionLevel || 9,
+            progressive: opt.progressive || false,
+            palette: true  // 使用调色板模式减少文件大小
+          });
+          break;
+          
+        case 'webp':
+          processedImage = processedImage.webp({
+            quality: opt.quality || 90,
+            effort: 6  // 压缩努力程度 (0-6)
+          });
+          break;
+      }
+    }
+    
+    // 保存处理后的图片
+    await processedImage.toFile(outputPath);
+    
+    // 显示文件大小对比
+    const inputStats = await fs.promises.stat(inputPath);
+    const outputStats = await fs.promises.stat(outputPath);
+    const compressionRatio = ((inputStats.size - outputStats.size) / inputStats.size * 100).toFixed(1);
+    
+    console.log(`Processed: ${inputPath} → ${outputPath}`);
+    console.log(`Size: ${(inputStats.size / 1024).toFixed(1)}KB → ${(outputStats.size / 1024).toFixed(1)}KB (${compressionRatio}% reduction)`);
+    
+  } catch (err: any) {
+    console.error(`Error processing ${inputPath}:`, err.message);
+  }
 }
